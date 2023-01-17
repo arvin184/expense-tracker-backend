@@ -4,7 +4,7 @@ const Expense = require("../models/Expense");
 async function add(req, res, next) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json(errors);
+    return res.status(400).json({success:false,status:errors.errors[0].msg});
   }
   let obj = {
     title: req.body.title,

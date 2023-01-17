@@ -7,9 +7,10 @@ const User = require("../models/User");
 const JWT_SECRET = "a@184*184!";
 
 const signup = async (req, res, next) => {
+ try{
   let errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json(errors);
+    return res.status(400).json({success:false,status:errors.errors[0].msg});
   }
 
   let email = await User.findOne({ email: req.body.email });
@@ -36,7 +37,13 @@ const signup = async (req, res, next) => {
 
   const token = jwt.sign(data, JWT_SECRET);
 
-  return res.status(200).json({ success: true, "auth-token": token });
+  return res.status(200).json({ success: true,status:"Sign in successful","auth-token": token });
+ }
+ catch(err)
+ {
+  console.log(err)
+  return res.status(500).json({"status":"Internal Error"});
+ }
 };
 
 const login = async (req, res, next) => {
@@ -45,21 +52,17 @@ const login = async (req, res, next) => {
     let password = req.body.password || "";
     email = email.trim();
     password = password.trim();
-    let errors = {};
+    
+    if(email.length==0 || password.length==0)
+    {
+    return res.status(400).json({success:false,status:"Empty input field"});
+
+    }
 
     let user = await User.findOne({ email: email });
     if (!user) {
-      errors = {
-        errors: [
-          {
-            value: req.body.email,
-            msg: "Email doesn't exists",
-            param: "email",
-            location: "body",
-          },
-        ],
-      };
-      return res.status(400).json(errors);
+      
+    return res.status(400).json({success:false,status:"email doesn't exists"});
     }
 
     let hashPW = user.password;
@@ -75,11 +78,11 @@ const login = async (req, res, next) => {
 
       return res
         .status(200)
-        .json({ success: true, username: user.username, "auth-token": token });
+        .json({ success: true, username: user.username, "auth-token": token,status:"Login successful" });
     } else {
       return res
-        .status(400)
-        .json({ success: false, msg: "Invalid credentials" });
+        .status(401)
+        .json({ success: false, status: "Invalid credentials" });
     }
   } catch (err) {
     console.log(err);
