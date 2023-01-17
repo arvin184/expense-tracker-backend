@@ -14,17 +14,9 @@ const signup = async (req, res, next) => {
 
   let email = await User.findOne({ email: req.body.email });
   if (email) {
-    errors = {
-      errors: [
-        {
-          value: req.body.email,
-          msg: "Email already exists",
-          param: "email",
-          location: "body",
-        },
-      ],
-    };
-    return res.status(400).json(errors);
+    return res
+      .status(401)
+      .json({ success: false, status: "Email already exists" });
   }
 
   var salt = bcrypt.genSaltSync(10);
