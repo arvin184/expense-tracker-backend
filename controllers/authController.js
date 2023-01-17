@@ -26,7 +26,7 @@ const signup = async (req, res, next) => {
   let user = await User.create({
     email: req.body.email.trim(),
     username: req.body.username.trim(),
-    password: hash,
+    password: hash
   });
 
   let data = {
@@ -37,7 +37,7 @@ const signup = async (req, res, next) => {
 
   const token = jwt.sign(data, JWT_SECRET);
 
-  return res.status(200).json({ success: true,status:"Sign in successful","auth-token": token });
+  return res.status(200).json({ success: true,status:"Sign up successful","auth-token": token });
  }
  catch(err)
  {
