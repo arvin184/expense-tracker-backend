@@ -7,9 +7,9 @@ const authController = require("../controllers/authController");
 router.post(
   "/signup",
   [
-    body("username", "Username: minimum 3 characters").isLength({ min: 3 }),
-    body("email", "Email: invalid email").isEmail(),
-    body("password", "Password: minimum 3 characters").isLength({ min: 3 }),
+    body("username", "Username can't be empty").exists().trim().escape(),
+    body("email", "Email invalid").isEmail().trim().escape(),
+    body("password", "Password can't be empty").exists().trim().escape(),
   ],
   authController.signup
 );

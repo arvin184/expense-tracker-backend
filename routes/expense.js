@@ -8,9 +8,9 @@ router.get('/fetch',verifyUser,expenseController.getAllExpenses);
 router.get('/fetch/:date',verifyUser,expenseController.getExpensesByDate);
 
 router.post("/add",[
-    body('title',"title: minimum 5 characters").isLength({min:5}).trim(),
-    body('price',"Price: invalid price").isInt().trim(),
-    body("date","Date: invalid date").isDate().trim()
+    body('title',"title can't be empty").exists().trim().escape(),
+    body('price',"Invalid price").isInt().trim(),
+    body("date","Invalid date").isDate().trim()
 ],verifyUser,expenseController.add);
 
 router.post("/remove",verifyUser,expenseController.remove);
